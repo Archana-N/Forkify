@@ -1,4 +1,4 @@
-import { elements } from './base';
+import { elements, limitRecipeTitle } from './base';
 
 export const getInput = () => elements.searchInput.value;
 
@@ -33,7 +33,8 @@ export const highlightedSelected = recipeId => {
     });
 
     // document.querySelector(`a[href*="#${recipeId}""]`) --> Select all Links (i.e., 'a' elements) with 'href' starting with '#', then followed by 'recipeId'    
-    document.querySelector(`a[href*="#${recipeId}"]`).classList.add('results__link--active');
+    // document.querySelector(`.results__link[href*="#${recipeId}""]`) --> Select all Links (i.e., '.results__link' elements) with 'href' starting with '#', then followed by 'recipeId'    
+    document.querySelector(`.results__link[href*="#${recipeId}"]`).classList.add('results__link--active');
 }
 
 const renderRecipe = recipe => {
@@ -52,33 +53,6 @@ const renderRecipe = recipe => {
     `;
 
     elements.searchResultList.insertAdjacentHTML('beforeend', markup);
-};
-
-/*
-// 'Pasta with tomato and spinach'
-accumulator = 0; current = 'Pasta'; (accumulator + current.length) = 5;  newTitle = ['Pasta']
-accumulator = 5; current = 'with'; (accumulator + current.length) = 9;  newTitle = ['Pasta', 'with']
-accumulator = 9; current = 'tomato'; (accumulator + current.length) = 15;  newTitle = ['Pasta', 'with', 'tomato']
-accumulator = 15; current = 'and'; (accumulator + current.length) = 18;  newTitle = ['Pasta', 'with', 'tomato',]
-accumulator = 18; current = 'spinach'; (accumulator + current.length) = 24;  newTitle = ['Pasta', 'with', 'tomato',]
-*/
-const limitRecipeTitle = (title, limit = 17) => {    
-    const newTitle = [];
-    
-    if(title.length > limit) {
-        title.split(' ').reduce((accumulator, current) => {
-            if(accumulator + current.length <= limit){
-                newTitle.push(current);
-            }
-
-            return (accumulator + current.length);
-        }, 0); //start with 'accumulator = 0'
-
-        // return the result
-        return `${newTitle.join(' ')} ...`;
-    }
-
-    return title;
 };
 
 const renderButtons = (page, numberOfResults, resultsPerPage) => {

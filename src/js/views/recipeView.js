@@ -1,7 +1,9 @@
 import { elements } from './base';
 import { Fraction } from 'fractional';
 
-export const renderRecipe = recipe => {
+export const renderRecipe = (recipe, isLiked) => {
+    const likedCss = isLiked ? '' : '-outlined';
+
     const markUp = `
         <figure class="recipe__fig">
             <img src="${recipe.img}" alt="${recipe.title}" class="recipe__img">
@@ -40,7 +42,7 @@ export const renderRecipe = recipe => {
             </div>
             <button class="recipe__love">
                 <svg class="header__likes">
-                    <use href="img/icons.svg#icon-heart-outlined"></use>
+                    <use href="img/icons.svg#icon-heart${likedCss}"></use>
                 </svg>
             </button>
         </div>
@@ -50,7 +52,7 @@ export const renderRecipe = recipe => {
             ${recipe.ingredients.map(element => createIngredient(element)).join('')}
             </ul>
 
-            <button class="btn-small recipe__btn">
+            <button class="btn-small recipe__btn recipe__btn--add">
                 <svg class="search__icon">
                     <use href="img/icons.svg#icon-shopping-cart"></use>
                 </svg>
@@ -110,16 +112,17 @@ const formatCount = count => {
     if(count) {
         // count = 2.5 --> 5/2 --> 2 1/2
         // count = 0.5 --> 1/2
-        const [integerPart, decimalPart] = count.toString().split('.').map(element => parseInt(element, 10));
+        const newCount = Math.round(count * 10000) / 10000;
+        const [integerPart, decimalPart] = newCount.toString().split('.').map(element => parseInt(element, 10));
 
         if(!decimalPart) 
-            return count;
+            return newCount;
         
         if(integerPart == 0) {
-            const fraction = new Fraction(count);
+            const fraction = new Fraction(newCount);
             return `${fraction.numerator}/${fraction.denominator}`;
         } else {
-            const fraction = new Fraction(count - integerPart);
+            const fraction = new Fraction(newCount - integerPart);
             return `${integerPart} ${fraction.numerator}/${fraction/denominator}`;
         }
     }
